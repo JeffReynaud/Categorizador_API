@@ -84,10 +84,44 @@ def obtener_categorizacion_gpt(comentario):
         
         Comentario: {comentario}
         
+        INSTRUCCIONES ESPECIALES:
+        1. Para la categoría 'Cambios_Devoluciones', incluye todo lo relacionado con:
+           - Cancelaciones de vuelos
+           - Suspensiones de vuelos
+           - Cambios de horario
+           - Cambios de día
+           - Solicitudes de devoluciones
+           - Cualquier modificación o cancelación de reservas
+        
+        2. Para el campo 'tipo', proporciona una descripción CONCISA que:
+           - Sea breve y directa (máximo 4-5 palabras)
+           - Capture la esencia del comentario
+           - No incluya detalles innecesarios (países, número de vuelos, etc.)
+           - Mantenga consistencia en descripciones similares
+           
+           Ejemplos de tipos concisos:
+           - "Altos precios de retorno"
+           - "Mejorar interfaz página"
+           - "Buena experiencia"
+           - "Problema en pago"
+           - "Solicitud de devolución"
+           - "Cancelación de vuelo"
+           - "Problema con equipaje"
+           - "Sugerencia de precios"
+           - "Consulta de horarios"
+           - "Problema en check-in"
+           
+           IMPORTANTE: 
+           - El tipo debe ser breve y directo
+           - No incluir información que se pueda obtener de otros campos
+           - Mantener consistencia en descripciones similares
+           - No forzar connotación negativa
+           - Si el comentario es positivo, reflejarlo en el tipo
+        
         Responde en formato JSON con los siguientes campos:
         - categoria: (una de las categorías listadas)
         - subcategoria: (si aplica, o null si no aplica)
-        - tipo: (descripción breve del tipo de comentario)
+        - tipo: (descripción breve y concisa del contenido del comentario)
         - confianza: (número entre 0 y 1)
         
         IMPORTANTE: Responde SOLO con el JSON, sin marcadores de código ni texto adicional.
@@ -180,15 +214,15 @@ def main():
         
         # Cargar datos de prueba
         print("\nProcesando archivo de prueba...")
-        df_test = pd.read_excel('Test_1.xlsx')
-        print("Columnas en Test_1.xlsx:")
+        df_test = pd.read_excel('Test_2.xlsx')
+        print("Columnas en Test_2.xlsx:")
         print(df_test.columns.tolist())
         
         # Buscar la columna de comentarios en el archivo de prueba
         columna_comentario = encontrar_columna_comentario(df_test)
         
         if columna_comentario is None:
-            raise ValueError(f"No se encontró la columna de comentarios en Test_1.xlsx. Columnas disponibles: {df_test.columns.tolist()}")
+            raise ValueError(f"No se encontró la columna de comentarios en Test_2.xlsx. Columnas disponibles: {df_test.columns.tolist()}")
         
         print(f"Usando columna '{columna_comentario}' para comentarios en archivo de prueba")
         df_test['Comentario_Limpio'] = df_test[columna_comentario].apply(limpiar_texto)
@@ -246,9 +280,23 @@ def main():
         df_resultados = pd.DataFrame(resultados)
         print(f"Se obtuvieron {len(df_resultados)} resultados")
         
-        # Guardar resultados
-        df_resultados.to_excel('Resultados_Categorizacion.xlsx', index=False)
-        print("Proceso completado. Resultados guardados en 'Resultados_Categorizacion.xlsx'")
+        # Generar nombre de archivo con timestamp
+        from datetime import datetime
+        nombre_archivo = f'Resultados_Categorizacion_{datetime.now().strftime("%Y%m%d_%H%M%S")}.xlsx'
+        
+        try:
+            # Guardar resultados en archivo nuevo
+            df_resultados.to_excel(nombre_archivo, index=False)
+            print(f"Resultados guardados exitosamente en '{nombre_archivo}'")
+        except Exception as e:
+            print(f"Error al guardar los resultados como Excel: {str(e)}")
+            # Intentar guardar como CSV como último recurso
+            try:
+                nombre_csv = f'Resultados_Categorizacion_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv'
+                df_resultados.to_csv(nombre_csv, index=False)
+                print(f"Los resultados se guardaron como CSV en '{nombre_csv}'")
+            except Exception as csv_error:
+                print(f"No se pudo guardar los resultados ni como Excel ni como CSV: {str(csv_error)}")
     
     except Exception as e:
         print(f"Error en el proceso: {str(e)}")

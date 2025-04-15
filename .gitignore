@@ -29,4 +29,15 @@ var/
 
 # Archivos del sistema
 .DS_Store
-Thumbs.db 
+Thumbs.db
+
+# Archivos de resultados temporales
+Resultados_Categorizacion_*.xlsx
+Resultados_Categorizacion_*.csv
+
+# Entornos virtuales
+venv/
+
+# Archivos de IDE
+.vscode/
+.idea/ 
