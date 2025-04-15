@@ -48,6 +48,196 @@ CATEGORIAS = [
     'Seats', 'Equipaje', 'Cambios_Devoluciones', 'Servicio_General'
 ]
 
+# Diccionario de mapeo para normalizar tipos similares
+TIPOS_NORMALIZADOS = {
+    # Precios
+    'precios_altos': [
+        'altos precios', 'altos precios de vuelo', 'altos precios de pasajes',
+        'altos precios de vuelos', 'problema con precios altos', 'precios elevados',
+        'precios caros', 'precios muy altos', 'precios excesivos', 'tarifas altas',
+        'tarifas elevadas', 'tarifas caras', 'tarifas excesivas'
+    ],
+    'cambio_precios_pago': [
+        'cambio de precio', 'cambio de precio al pagar', 'cambio de precio tiquete',
+        'precios más altos inesperados', 'aumento de precios inesperados',
+        'altos precios inesperados', 'cambio de tarifa', 'aumento de tarifa',
+        'cambio de precio final', 'precio diferente al mostrado', 'precio cambió',
+        'tarifa cambió', 'precio aumentó', 'tarifa aumentó'
+    ],
+    'problema_website': [
+        'problema con la página', 'problema en plataforma', 'problema en página',
+        'error en website', 'problema en sitio web', 'falla en página',
+        'problema en portal', 'error en plataforma', 'problema en interfaz',
+        'error en página', 'falla en sitio', 'problema en web', 'error en web',
+        'problema en navegación', 'error en navegación'
+    ],
+    'problema_pago': [
+        'problema al pagar', 'error en pago', 'falla en pago',
+        'problema con pago', 'error en transacción', 'problema en transacción',
+        'falla en transacción', 'problema con tarjeta', 'error con tarjeta',
+        'problema en facturación', 'error en facturación', 'problema en compra',
+        'error en compra', 'problema con factura', 'error con factura',
+        'problema en cobro', 'error en cobro', 'problema con cobro',
+        'falla en facturación', 'falla en compra', 'falla en cobro'
+    ],
+    'problema_checkin': [
+        'problema en check-in', 'error en checkin', 'falla en check-in',
+        'problema al hacer check-in', 'error al hacer checkin',
+        'problema en registro', 'error en registro', 'problema al registrarse',
+        'error al registrarse', 'problema en abordaje', 'error en abordaje',
+        'problema al abordar', 'error al abordar'
+    ],
+    'problema_equipaje': [
+        'problema con equipaje', 'error con maletas', 'problema con maletas',
+        'problema con valijas', 'error con equipaje', 'problema en equipaje',
+        'falla en equipaje', 'problema con bagaje', 'error con valijas',
+        'problema con bultos', 'error con bultos', 'problema en maletas',
+        'problema en valijas', 'problema en bultos'
+    ],
+    'solicitud_devolucion': [
+        'solicitud de devolución', 'pedido de reembolso', 'solicitud de reembolso',
+        'pedido de devolución', 'solicitud de dinero', 'pedido de dinero',
+        'solicitud de pago', 'pedido de pago', 'solicitud de reintegro',
+        'pedido de reintegro', 'solicitud de retorno', 'pedido de retorno',
+        'solicitud de devolución de dinero', 'pedido de devolución de dinero'
+    ],
+    'cancelacion_vuelo': [
+        'cancelación de vuelo', 'cancelacion de vuelo', 'cancelación de reserva',
+        'cancelacion de reserva', 'suspensión de vuelo', 'suspension de vuelo',
+        'vuelo cancelado', 'reserva cancelada', 'vuelo suspendido',
+        'reserva suspendida', 'cancelación de itinerario', 'cancelacion de itinerario',
+        'itinerario cancelado', 'itinerario suspendido'
+    ],
+    'cambio_horario': [
+        'cambio de horario', 'modificación de horario', 'cambio de hora',
+        'modificación de hora', 'cambio de vuelo', 'modificación de vuelo',
+        'cambio de itinerario', 'modificación de itinerario', 'cambio de ruta',
+        'modificación de ruta', 'cambio de conexión', 'modificación de conexión',
+        'cambio de escala', 'modificación de escala'
+    ],
+    'buena_experiencia': [
+        'buena experiencia', 'excelente servicio', 'muy buen servicio',
+        'servicio satisfactorio', 'experiencia positiva', 'servicio positivo',
+        'buen servicio', 'experiencia agradable', 'servicio excelente',
+        'experiencia muy buena', 'servicio muy bueno', 'experiencia satisfactoria',
+        'servicio agradable', 'experiencia recomendable'
+    ],
+    'mal_servicio': [
+        'mal servicio', 'servicio deficiente', 'mala atención',
+        'atención deficiente', 'servicio negativo', 'experiencia negativa',
+        'mala experiencia', 'servicio insatisfactorio', 'atención mala',
+        'servicio pésimo', 'experiencia pésima', 'atención pésima',
+        'servicio terrible', 'experiencia terrible', 'atención terrible'
+    ],
+    # Discount Club
+    'problema_discount_club': [
+        'problema con discount club', 'error en discount club', 'falla en discount club',
+        'problema con club de descuentos', 'error en club de descuentos',
+        'falla en club de descuentos', 'problema con membresía', 'error en membresía',
+        'falla en membresía', 'problema con descuento', 'error en descuento',
+        'falla en descuento', 'problema con beneficio', 'error en beneficio',
+        'falla en beneficio', 'problema con club', 'error en club', 'falla en club'
+    ],
+    'activacion_discount_club': [
+        'activación de discount club', 'activacion de discount club',
+        'activación de club de descuentos', 'activacion de club de descuentos',
+        'activación de membresía', 'activacion de membresía',
+        'activación de descuento', 'activacion de descuento',
+        'activación de beneficio', 'activacion de beneficio',
+        'activación de club', 'activacion de club'
+    ],
+    'beneficio_discount_club': [
+        'beneficio de discount club', 'beneficio de club de descuentos',
+        'beneficio de membresía', 'beneficio de descuento',
+        'beneficio de club', 'descuento de discount club',
+        'descuento de club de descuentos', 'descuento de membresía',
+        'descuento de club'
+    ],
+    # Promociones
+    'problema_promocion': [
+        'problema con promoción', 'error en promoción', 'falla en promoción',
+        'problema con promociones', 'error en promociones', 'falla en promociones',
+        'problema con oferta', 'error en oferta', 'falla en oferta',
+        'problema con ofertas', 'error en ofertas', 'falla en ofertas',
+        'problema con descuento', 'error en descuento', 'falla en descuento',
+        'problema con descuentos', 'error en descuentos', 'falla en descuentos'
+    ],
+    'consulta_promocion': [
+        'consulta de promoción', 'consulta de promociones',
+        'consulta de oferta', 'consulta de ofertas',
+        'consulta de descuento', 'consulta de descuentos',
+        'pregunta sobre promoción', 'pregunta sobre promociones',
+        'pregunta sobre oferta', 'pregunta sobre ofertas',
+        'pregunta sobre descuento', 'pregunta sobre descuentos'
+    ],
+    'solicitud_promocion': [
+        'solicitud de promoción', 'solicitud de promociones',
+        'solicitud de oferta', 'solicitud de ofertas',
+        'solicitud de descuento', 'solicitud de descuentos',
+        'pedido de promoción', 'pedido de promociones',
+        'pedido de oferta', 'pedido de ofertas',
+        'pedido de descuento', 'pedido de descuentos'
+    ],
+    # Disponibilidad
+    'problema_disponibilidad': [
+        'problema con disponibilidad', 'error en disponibilidad',
+        'falla en disponibilidad', 'problema con vuelos disponibles',
+        'error en vuelos disponibles', 'falla en vuelos disponibles',
+        'problema con asientos disponibles', 'error en asientos disponibles',
+        'falla en asientos disponibles', 'problema con fechas disponibles',
+        'error en fechas disponibles', 'falla en fechas disponibles'
+    ],
+    'consulta_disponibilidad': [
+        'consulta de disponibilidad', 'consulta de vuelos disponibles',
+        'consulta de asientos disponibles', 'consulta de fechas disponibles',
+        'pregunta sobre disponibilidad', 'pregunta sobre vuelos disponibles',
+        'pregunta sobre asientos disponibles', 'pregunta sobre fechas disponibles'
+    ],
+    # Aeropuerto
+    'problema_aeropuerto': [
+        'problema en aeropuerto', 'error en aeropuerto', 'falla en aeropuerto',
+        'problema en terminal', 'error en terminal', 'falla en terminal',
+        'problema en sala de espera', 'error en sala de espera',
+        'falla en sala de espera', 'problema en puerta de embarque',
+        'error en puerta de embarque', 'falla en puerta de embarque'
+    ],
+    'consulta_aeropuerto': [
+        'consulta de aeropuerto', 'consulta de terminal',
+        'consulta de sala de espera', 'consulta de puerta de embarque',
+        'pregunta sobre aeropuerto', 'pregunta sobre terminal',
+        'pregunta sobre sala de espera', 'pregunta sobre puerta de embarque'
+    ],
+    # Seats
+    'problema_asiento': [
+        'problema con asiento', 'error en asiento', 'falla en asiento',
+        'problema con seats', 'error en seats', 'falla en seats',
+        'problema con lugar', 'error en lugar', 'falla en lugar',
+        'problema con ubicación', 'error en ubicación', 'falla en ubicación',
+        'problema con posición', 'error en posición', 'falla en posición'
+    ],
+    'consulta_asiento': [
+        'consulta de asiento', 'consulta de seats', 'consulta de lugar',
+        'consulta de ubicación', 'consulta de posición',
+        'pregunta sobre asiento', 'pregunta sobre seats', 'pregunta sobre lugar',
+        'pregunta sobre ubicación', 'pregunta sobre posición'
+    ]
+}
+
+def normalizar_tipo(tipo_original):
+    """
+    Normaliza el tipo de comentario según el diccionario de mapeo.
+    Retorna el tipo normalizado o el original si no hay coincidencia.
+    """
+    tipo_original = tipo_original.lower().strip()
+    
+    # Buscar coincidencia en el diccionario de mapeo
+    for tipo_normalizado, variantes in TIPOS_NORMALIZADOS.items():
+        if tipo_original in variantes:
+            return tipo_normalizado.replace('_', ' ').title()
+    
+    # Si no hay coincidencia, retornar el tipo original
+    return tipo_original.title()
+
 def limpiar_texto(texto):
     """Limpia y normaliza el texto."""
     if not isinstance(texto, str):
@@ -100,16 +290,16 @@ def obtener_categorizacion_gpt(comentario):
            - Mantenga consistencia en descripciones similares
            
            Ejemplos de tipos concisos:
-           - "Altos precios de retorno"
-           - "Mejorar interfaz página"
+           - "Altos precios"
+           - "Problema con la página"
            - "Buena experiencia"
            - "Problema en pago"
            - "Solicitud de devolución"
            - "Cancelación de vuelo"
            - "Problema con equipaje"
-           - "Sugerencia de precios"
-           - "Consulta de horarios"
+           - "Cambio de precios al pagar"
            - "Problema en check-in"
+           - "Mal servicio"
            
            IMPORTANTE: 
            - El tipo debe ser breve y directo
@@ -214,15 +404,15 @@ def main():
         
         # Cargar datos de prueba
         print("\nProcesando archivo de prueba...")
-        df_test = pd.read_excel('Test_2.xlsx')
-        print("Columnas en Test_2.xlsx:")
+        df_test = pd.read_excel('Test_3.xlsx')
+        print("Columnas en Test_3.xlsx:")
         print(df_test.columns.tolist())
         
         # Buscar la columna de comentarios en el archivo de prueba
         columna_comentario = encontrar_columna_comentario(df_test)
         
         if columna_comentario is None:
-            raise ValueError(f"No se encontró la columna de comentarios en Test_2.xlsx. Columnas disponibles: {df_test.columns.tolist()}")
+            raise ValueError(f"No se encontró la columna de comentarios en Test_3.xlsx. Columnas disponibles: {df_test.columns.tolist()}")
         
         print(f"Usando columna '{columna_comentario}' para comentarios en archivo de prueba")
         df_test['Comentario_Limpio'] = df_test[columna_comentario].apply(limpiar_texto)
@@ -263,7 +453,7 @@ def main():
                         'Comentario': row[columna_comentario],
                         'Categoria': cat_dict['categoria'],
                         'Subcategoria': cat_dict['subcategoria'],
-                        'Tipo': cat_dict['tipo'],
+                        'Tipo': normalizar_tipo(cat_dict['tipo']),
                         'Confianza': cat_dict['confianza']
                     })
                     print(f"Comentario {idx + 1} procesado correctamente")
